@@ -14,7 +14,7 @@
   <thead class="thead-dark">
     <tr>
       <th>#</th>
-      <th>Imagem</th>
+      <th><button class="btn btn-outline-light btn-sm" (click)="updateImageStage()">{{!isImg ? 'show':'fade'}}</button></th>
       <th>Tema</th>
       <th>Local</th>
       <th>Data</th>
@@ -26,7 +26,7 @@
   <tbody>
     <tr *ngFor="let evento of eventos">
       <td>{{evento.eventoId}}</td>
-      <td>{{evento.imagemURL}}</td>
+      <td><img [collapse]="isImg" [isAnimated]="true" src="/assets/png1.png" [style.width.px]="imgSize"></td>
       <td>{{evento.tema}}</td>
       <td>{{evento.local}}</td>
       <td>{{evento.dataEvento}}</td>

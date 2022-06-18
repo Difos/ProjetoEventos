@@ -10,6 +10,8 @@ import { Component, OnInit } from '@angular/core';
 export class EventosComponent implements OnInit {
 
   public eventos: any = [];
+  isImg:boolean = true;
+  imgSize:number=160;
 
   constructor(private http:HttpClient) { }
 
@@ -23,4 +25,9 @@ export class EventosComponent implements OnInit {
        error => console.log(error)
       )
   }
+
+  public updateImageStage():void{
+    this.isImg = !this.isImg
+  }
+
 }
