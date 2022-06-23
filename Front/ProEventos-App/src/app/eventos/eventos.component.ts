@@ -47,12 +47,9 @@ export class EventosComponent implements OnInit {
       },
       error => console.log(error)
     )
-
-
   }
 
   public updateImageStage(): void {
     this.isImg = !this.isImg
   }
-
 }
