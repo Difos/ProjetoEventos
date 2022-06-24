@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProEventos.Domain;
 using ProEventos.Infra;
+using ProEventos.Infra.Context;
 
 namespace ProEventos.API.Controllers
 {

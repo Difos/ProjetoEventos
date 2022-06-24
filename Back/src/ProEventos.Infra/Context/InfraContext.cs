@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain;
 
-namespace ProEventos.Infra{
+namespace ProEventos.Infra.Context{
     public class InfraContext : DbContext 
     {
         public InfraContext(DbContextOptions<InfraContext> options):base(options)
