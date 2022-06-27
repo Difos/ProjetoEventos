@@ -14,7 +14,7 @@ namespace ProEventos.Infra
         {
             _context = context;
         }
-         public async Task<Evento[]> GetAllEventosAsync(string tema, bool includePalestrantes = false)
+        public async Task<Evento[]> GetAllEventosAsync(bool includePalestrantes = false)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace ProEventos.Infra
             }
         }
 
-        public async Task<Evento> GetAllEventosByIdAsync(int EventoId, bool includePalestrantes = false)
+        public async Task<Evento> GetEventosByIdAsync(int EventoId, bool includePalestrantes = false)
         {
             try
             {
@@ -53,10 +53,9 @@ namespace ProEventos.Infra
                         .ThenInclude(p => p.Palestrante);
                 }
 
-                query = query.AsNoTracking().OrderBy(e => e.Id)
-                    .Where(e => e.Id == EventoId);
+                query = query.AsNoTracking().OrderBy(e => e.Id);
 
-                return await query.FirstOrDefaultAsync();
+                return await query.FirstOrDefaultAsync(e => e.Id == EventoId);
             }
             catch (System.Exception)
             {
@@ -65,7 +64,7 @@ namespace ProEventos.Infra
             }
         }
 
-        public async Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
+        public async Task<Evento[]> GetEventosByTemaAsync(string tema, bool includePalestrantes = false)
         {
             try
             {

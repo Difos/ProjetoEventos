@@ -6,11 +6,11 @@ using ProEventos.Infra.Context;
 
 namespace ProEventos.Infra
 {
-    public class ProEventosInfra : IRepository
+    public class Repository : IRepository
     {
         public readonly InfraContext _context;
 
-        public ProEventosInfra(InfraContext context)
+        public Repository(InfraContext context)
         {
             _context = context;
         }

@@ -12,8 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ProEventos.Application;
+using ProEventos.Application.Interfaces;
 using ProEventos.Infra;
 using ProEventos.Infra.Context;
+using ProEventos.Infra.Interfaces;
 
 namespace ProEventos.API
 {
@@ -33,7 +36,15 @@ namespace ProEventos.API
                 context => context.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = 
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );
+
+            services.AddScoped<IEventoService,EventoService>();
+            services.AddScoped<IRepository,Repository>();
+            services.AddScoped<IEventoRepository,EventoRepository>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });

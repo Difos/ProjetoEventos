@@ -7,7 +7,7 @@ using ProEventos.Infra.Interfaces;
 
 namespace ProEventos.Application
 {
-    public class EventoService : IEventosServices
+    public class EventoService : IEventoService
     {
         public readonly IRepository _repo;
         public readonly IEventoRepository _eventoRepository;
@@ -24,7 +24,7 @@ namespace ProEventos.Application
 
                 if (await _repo.SaveChangesAsync())
                 {
-                    return await _eventoRepository.GetAllEventosByIdAsync(model.Id, false);
+                    return await _eventoRepository.GetEventosByIdAsync(model.Id, false);
                 }
                 return null;
             }
@@ -39,7 +39,7 @@ namespace ProEventos.Application
         {
             try
             {
-                var evento = await _eventoRepository.GetAllEventosByIdAsync(eventoId,false);
+                var evento = await _eventoRepository.GetEventosByIdAsync(eventoId,false);
 
                 if(evento == null) return null;
 
@@ -49,7 +49,7 @@ namespace ProEventos.Application
 
                 if(await _repo.SaveChangesAsync())
                 {   
-                    return await _eventoRepository.GetAllEventosByIdAsync(model.Id,false);
+                    return await _eventoRepository.GetEventosByIdAsync(model.Id,false);
                 }
 
                 return null;
@@ -64,7 +64,7 @@ namespace ProEventos.Application
         {
             try
             {
-                var evento = await _eventoRepository.GetAllEventosByIdAsync(eventoId,false);
+                var evento = await _eventoRepository.GetEventosByIdAsync(eventoId,false);
 
                 if(evento == null) throw new Exception("Evento for delete not found.");
 
@@ -76,23 +76,65 @@ namespace ProEventos.Application
             catch (Exception ex)
             {
                 
-                throw new Exception(ex.Message);;
+                throw new Exception(ex.Message);
             }
         }
 
-        public Task<Evento[]> GetAllEventosAsync(string tema, bool includePalestrantes = false)
+        public async Task<Evento[]> GetAllEventosAsync(bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var eventos = await _eventoRepository.GetAllEventosAsync(false);
+                if(eventos == null)
+                {
+                    return null;
+                }
+
+                return eventos;
+            }
+            catch (Exception ex) 
+            {
+                
+                throw new Exception(ex.Message);
+            }
         }
 
-        public Task<Evento> GetAllEventosByIdAsync(int EventoId, bool includePalestrantes = false)
+        public async  Task<Evento> GetEventosByIdAsync(int eventoId, bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var eventos = await _eventoRepository.GetEventosByIdAsync(eventoId,false);
+                if(eventos == null)
+                {
+                    return null;
+                }
+
+                return eventos;
+            }
+            catch (Exception ex) 
+            {
+                
+                throw new Exception(ex.Message);
+            }
         }
 
-        public Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
+        public async Task<Evento[]> GetEventosByTemaAsync(string tema, bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var eventos = await _eventoRepository.GetEventosByTemaAsync(tema,false);
+                if(eventos == null)
+                {
+                    return null;
+                }
+
+                return eventos;
+            }
+            catch (Exception ex) 
+            {
+                
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

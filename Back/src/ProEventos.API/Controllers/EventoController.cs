@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using ProEventos.Domain;
 using ProEventos.Infra;
 using ProEventos.Infra.Context;
+using ProEventos.Application.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace ProEventos.API.Controllers
 {
@@ -14,30 +16,110 @@ namespace ProEventos.API.Controllers
     [Route("api/[controller]")]
     public class EventoController : ControllerBase
     {
-        private readonly InfraContext _context;
-        public EventoController(InfraContext context)
+        private readonly IEventoService _eventoService;
+        public EventoController(IEventoService eventoService)
         {
-            _context = context;
+            _eventoService = eventoService;
         }
 
         [HttpGet]
-        public IEnumerable<Evento> Get()
+        public async Task<IActionResult> Get()
         {
-            return _context.Eventos; 
+            try
+            {
+                var eventos = await _eventoService.GetAllEventosAsync(true);
+                if (eventos == null) return NotFound("Event not found");
+
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to retrieve data. Erro {ex.Message}");
+            }
         }
 
-         [HttpGet("{id}")]
-        public Evento GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            return _context.Eventos.FirstOrDefault(e => e.Id ==id); 
+            try
+            {
+                var eventos = await _eventoService.GetEventosByIdAsync(id, false);
+                if (eventos == null) return NotFound("Event by id not found");
+
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to retrieve data. Erro {ex.Message}");
+            }
         }
 
-        
+        [HttpGet("{tema}/tema")] 
+        public async Task<IActionResult> GetByTema(string tema)
+        {
+            try
+            {
+                var eventos = await _eventoService.GetEventosByTemaAsync(tema, true);
+                if (eventos == null) return NotFound("Event by title not found");
+
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to retrieve data. Erro {ex.Message}");
+            }
+        }
 
         [HttpPost]
-        public string Post()
+        public async Task<IActionResult> Post(Evento model)
         {
-            return "";
+            try
+            {
+                var eventos = await _eventoService.AddEventos(model);
+                if (eventos == null) return BadRequest("Data not insert");
+
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to insert data. Erro {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, Evento model)
+        {
+            try
+            {
+                var eventos = await _eventoService.Update(id, model);
+                if (eventos == null) return BadRequest("Data not updated");
+
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to update data. Erro {ex.Message}");
+            }
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> delete(int id)
+        {
+            try
+            {
+                return await _eventoService.DeleteEventos(id) ? Ok("Deleted"):BadRequest("Data not deleted");      
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to deleted data. Erro {ex.Message}");
+            }
         }
 
     }
