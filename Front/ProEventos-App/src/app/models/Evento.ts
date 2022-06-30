@@ -3,7 +3,7 @@ import { Palestrante } from "./Palestrante"
 import { RedeSocial } from "./RedeSocial"
 
 export interface Evento {
-  local: number
+  local: string
   id: number
   dataEvento?: Date
   tema: string
@@ -11,7 +11,7 @@ export interface Evento {
   imagemURL: string
   telefone: string
   email: string
-  lotes: Lote[]
+  lote: Lote[]
   redesSociais: RedeSocial[]
   palestrantesEventos: Palestrante[]
 }
