@@ -1,10 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
+import { EventosComponent } from './Components/eventos/eventos.component';
+import { DashboardComponent } from './Components/dashboard/dashboard.component';
+import { PalestrantesComponent } from './Components/palestrantes/palestrantes.component';
+import { ContatosComponent } from './Components/contatos/contatos.component';
+import { PerfilComponent } from './Components/perfil/perfil.component';
+
+const routes: Routes = [
+  { path: 'eventos',component:EventosComponent},
+  { path: 'dashboard',component:DashboardComponent},
+  { path: 'palestrantes',component:PalestrantesComponent},
+  { path: 'contatos',component:ContatosComponent},
+  { path: 'perfil',component:PerfilComponent},
+  { path: '',redirectTo:'dashboard',pathMatch:'full'},
+  { path: '**',redirectTo:'dashboard',pathMatch:'full'}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }
