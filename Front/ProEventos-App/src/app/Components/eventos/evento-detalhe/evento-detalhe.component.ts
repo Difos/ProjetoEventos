@@ -26,12 +26,16 @@ export class EventoDetalheComponent implements OnInit {
   public validation(): void {
     this.form = this.formBuilder.group({
       tema: ['',[Validators.required, Validators.minLength(4),Validators.maxLength(50)]],
-      local: ['',Validators.required],
+      local: ['',[Validators.required,Validators.minLength(4),Validators.maxLength(50)]],
       dataEvento: ['',Validators.required],
       qtdPessoas: ['',[Validators.required,Validators.max(120000)]],
       imagemURL: ['',Validators.required],
       telefone: ['',Validators.required],
       email: ['',[Validators.required,Validators.email]]
     });
+  }
+
+  public resetForm(): void {
+    this.form.reset();
   }
 }
