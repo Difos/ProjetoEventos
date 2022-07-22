@@ -1,7 +1,8 @@
 <app-titulo [titulo]="'Perfil'"></app-titulo>
 <hr>
 <div class="card rounded shadow-sm">
-  <form>
+  <form [formGroup]="form">
+    {{form.status | json}}
     <div class="row p-3">
       <div class="col-lg-3 pt-1">
         <div class="card mb-3">
@@ -45,7 +46,8 @@
           </div>
           <div class="form-group col">
             <label>Título</label>
-            <select class="form-control">
+            <select class="form-control is-invalid" [ngClass]="{'is-invalid':f.titulo.errors && f.titulo.touched}"
+              formControlName="titulo">
               <option value=""></option>
               <option value="0">Não Quero</option>
               <option value="Senhorita">Tecnólogo(a)</option>
@@ -55,39 +57,69 @@
               <option value="Senhorita">Mestre</option>
               <option value="Senhorita">Doutor(a)</option>
               <option value="Senhorita">Pós Doc</option>
+
             </select>
+            <div class="invalid-feedback" *ngIf="f.titulo?.errors?.required">
+              o titulo é requerido
+            </div>
           </div>
           <div class="form-group col-sm-5">
             <label>Primeiro Nome</label>
-            <input type="text" class="form-control" />
-
+            <input type="text" class="form-control is-invalid"
+              [ngClass]="{'is-invalid':f.primeiroNome.errors && f.primeiroNome.touched}"
+              formControlName="primeiroNome" />
+            <div *ngIf="f.primeiroNome?.errors?.required" class="invalid-feedback">
+              primeiroNome é requerido
+            </div>
           </div>
           <div class="form-group col-sm-5">
             <label>Último nome</label>
-            <input type="text" class="form-control" />
-
+            <input type="text" class="form-control is-invalid"
+              [ngClass]="{'is-invalid':f.ultimoNome.errors && f.ultimoNome.touched}" formControlName="ultimoNome" />
+            <div *ngIf="f.ultimoNome?.errors?.required" class="invalid-feedback">
+              ultimo nome é requerido
+            </div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-sm-5">
             <label>E-mail</label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control is-invalid"
+              [ngClass]="{'is-invalid':f.email.errors && f.email.touched}" formControlName="email" />
+              <div *ngIf="f.email?.errors?.required" class="invalid-feedback">
+                email é requerido
+              </div>
+              <div *ngIf="f.email?.errors?.email" class="invalid-feedback">
+                email precisa ser valido
+              </div>
           </div>
           <div class="form-group col-sm-4">
             <label>Telefone</label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control is-invalid"
+              [ngClass]="{'is-invalid':f.telefone.errors && f.telefone.touched}" formControlName="telefone" />
+            <div *ngIf="f.telefone?.errors?.required" class="invalid-feedback">
+              telefone é requerido
+            </div>
           </div>
           <div class="form-group col-sm">
             <label>Função</label>
-            <select class="form-control">
+            <select class="form-control is-invalid" [ngClass]="{'is-invalid':f.funcao.errors && f.funcao.touched}"
+              formControlName="funcao">
               <option value=""></option>
               <option value="Participante">Participante</option>
               <option value="Palestrante">Palestrante</option>
             </select>
+            <div class="invalid-feedback" *ngIf="f.funcao?.errors?.required">
+              a função e requerida
+            </div>
           </div>
           <form-group class="col-12">
             <label>Descrição</label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control is-invalid"
+              [ngClass]="{'is-invalid':f.descricao.errors && f.descricao.touched}" formControlName="descricao" />
+            <div class="invalid-feedback" *ngIf="f.descricao?.errors?.required">
+              a descricao e requerida
+            </div>
           </form-group>
         </div>
         <div>
@@ -97,11 +129,21 @@
         <div class="form-row">
           <div class="form-group col-sm">
             <label>Senha</label>
-            <input type="password" class="form-control" />
+            <input type="password" class="form-control is-invalid"
+              [ngClass]="{'is-invalid':f.senha.errors && f.senha.touched}" formControlName="senha" />
+            <div *ngIf="f.senha?.errors?.required" class="invalid-feedback">
+              A senha é requerida
+            </div>
           </div>
           <div class="form-group col-sm">
             <label>Confirmar Senha</label>
-            <input type="password" class="form-control" />
+            <input type="password" class="form-control is-invalid"
+              [ngClass]="{'is-invalid':f.confirmarSenha.errors && f.confirmarSenha.touched}"
+              formControlName="confirmarSenha" />
+            <div *ngIf="f.confirmarSenha?.touched && f.confirmarSenha?.invalid" class="invalid-feedback">
+              <div *ngIf="f.confirmarSenha?.errors?.required">Senha é requirida</div>
+              <div *ngIf="f.confirmarSenha?.errors?.confirmarSenha">confirmar senha deve ser igual a senha</div>
+            </div>
           </div>
         </div>
       </div>

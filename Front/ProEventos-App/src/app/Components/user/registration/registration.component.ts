@@ -12,7 +12,7 @@ export class RegistrationComponent implements OnInit {
 
   form!:FormGroup
 
-  get f():any{
+  public get f():any{
     return this.form.controls
   }
 
