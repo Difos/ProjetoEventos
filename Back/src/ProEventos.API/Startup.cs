@@ -17,6 +17,8 @@ using ProEventos.Application.Interfaces;
 using ProEventos.Infra;
 using ProEventos.Infra.Context;
 using ProEventos.Infra.Interfaces;
+using AutoMapper;
+using ProEventos.API.Helpers;
 
 namespace ProEventos.API
 {
@@ -41,10 +43,21 @@ namespace ProEventos.API
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore
                     );
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<IEventoService,EventoService>();
             services.AddScoped<IRepository,Repository>();
             services.AddScoped<IEventoRepository,EventoRepository>();
 
+            /*var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new ProEventosProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);*/
+
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
