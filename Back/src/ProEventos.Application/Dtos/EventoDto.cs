@@ -17,7 +17,7 @@ namespace ProEventos.Application.Dtos
         Range(1,120000,ErrorMessage="Não pode ser menor que 1 e maior que 120 mil")
         ]
         public int QtdPessoas { get; set; }
-        [RegularExpression(@".*(gif|jpg?g|bmp|png)$)",ErrorMessage="Nao é uma imagem válida (gif,jpg, bmp ou png")]
+        [RegularExpression("([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)",ErrorMessage="Nao é uma imagem válida (gif,jpg, bmp ou png")]
         public string ImagemURL { get; set; }
         [Required(ErrorMessage = "O campo {0} é necessário"),
         Phone(ErrorMessage="O {0} esta com numero invalido")
