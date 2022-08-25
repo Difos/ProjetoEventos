@@ -18,6 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 export class EventoDetalheComponent implements OnInit {
 
   form!: FormGroup;
+  evento = {} as Evento;
+  saveState = 'post';
 
   get f(): any {
     return this.form.controls
@@ -32,7 +34,7 @@ export class EventoDetalheComponent implements OnInit {
     }
   }
 
-  evento = {} as Evento;
+
 
   constructor(private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
@@ -47,12 +49,16 @@ export class EventoDetalheComponent implements OnInit {
     const eventoIdParam = this.router.snapshot.paramMap.get('id');
 
 
+
     if (eventoIdParam != null) {
+      this.saveState = 'put';
       this.spinner.show();
       this.eventoService.getEventoId(+eventoIdParam).subscribe(
         (evento: Evento) => {
           this.evento = { ...evento }
           this.form.patchValue(this.evento);
+
+
         },
         (error: any) => {
           this.spinner.hide();
@@ -61,6 +67,7 @@ export class EventoDetalheComponent implements OnInit {
         },
         () => this.spinner.hide()
       )
+
     }
   }
   ngOnInit(): void {
@@ -87,5 +94,46 @@ export class EventoDetalheComponent implements OnInit {
 
   public cssValidator(campoForm: FormControl): any {
     return { 'is-invalid': campoForm?.errors && campoForm?.touched }
+  }
+
+  public salvarAlteracao():void{
+
+    this.spinner.show();
+
+    if(this.form.valid){
+
+      if(this.saveState === 'post'){
+        this.evento = {
+          ...this.form.value
+        }
+        this.eventoService.postEvento(this.evento).subscribe(
+          ()=> this.toastr.success('Evento salvo com sucesso','success'),
+          (error:any)=> {
+            console.error(error);
+            this.spinner.hide()
+            this.toastr.error('Erro ao salvar o evento','error')
+          },
+          ()=> this.spinner.hide()
+        )
+
+
+      }else{
+        alert(JSON.stringify(this.evento))
+        this.evento = { id: this.evento.id,
+          ...this.form.value
+        }
+
+        this.eventoService.putEvento(this.evento.id,this.evento).subscribe(
+          ()=> this.toastr.success('Evento salvo com sucesso','success'),
+          (error:any)=> {
+            console.error(error);
+            this.spinner.hide()
+            this.toastr.error('Erro ao alterar o evento','error')
+          },
+          ()=> this.spinner.hide()
+        )
+      }
+
+    }
   }
 }

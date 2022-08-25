@@ -28,7 +28,8 @@ export class EventoService {
     return this.http.post<Evento>(this.baseURL,evento)
   }
 
-  public putEvento(evento:Evento, id:number):Observable<Evento> {
+  public putEvento(id:number,evento:Evento,):Observable<Evento> {
+    alert(JSON.stringify(evento)+'id:"'+id)
     return this.http.put<Evento>(`${this.baseURL}/${id}`,evento)
   }
 
