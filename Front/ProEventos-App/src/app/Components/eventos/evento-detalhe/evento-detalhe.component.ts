@@ -57,17 +57,14 @@ export class EventoDetalheComponent implements OnInit {
         (evento: Evento) => {
           this.evento = { ...evento }
           this.form.patchValue(this.evento);
-
-
         },
         (error: any) => {
           this.spinner.hide();
-          this.toastr.error('Error ao tentar carregar evento','Erro!')
+          this.toastr.error('Error ao tentar carregar evento', 'Erro!')
           console.error(error);
         },
         () => this.spinner.hide()
       )
-
     }
   }
   ngOnInit(): void {
@@ -96,44 +93,26 @@ export class EventoDetalheComponent implements OnInit {
     return { 'is-invalid': campoForm?.errors && campoForm?.touched }
   }
 
-  public salvarAlteracao():void{
+  public salvarAlteracao(): void {
 
     this.spinner.show();
 
-    if(this.form.valid){
+    if (this.form.valid) {
 
-      if(this.saveState === 'post'){
-        this.evento = {
-          ...this.form.value
-        }
-        this.eventoService.postEvento(this.evento).subscribe(
-          ()=> this.toastr.success('Evento salvo com sucesso','success'),
-          (error:any)=> {
-            console.error(error);
-            this.spinner.hide()
-            this.toastr.error('Erro ao salvar o evento','error')
-          },
-          ()=> this.spinner.hide()
-        )
+      this.evento = (this.saveState === 'post')
+        ? { ...this.form.value }
+        : { id: this.evento.id, ...this.form.value }
 
-
-      }else{
-        alert(JSON.stringify(this.evento))
-        this.evento = { id: this.evento.id,
-          ...this.form.value
-        }
-
-        this.eventoService.putEvento(this.evento.id,this.evento).subscribe(
-          ()=> this.toastr.success('Evento salvo com sucesso','success'),
-          (error:any)=> {
-            console.error(error);
-            this.spinner.hide()
-            this.toastr.error('Erro ao alterar o evento','error')
-          },
-          ()=> this.spinner.hide()
-        )
-      }
-
+      this.eventoService[this.saveState](this.evento).subscribe(
+        () => this.toastr.success('Evento salvo com sucesso', 'success'),
+        (error: any) => {
+          console.error(error);
+          this.spinner.hide()
+          this.toastr.error('Erro ao salvar o evento', 'error')
+        },
+        () => this.spinner.hide()
+      );
     }
   }
 }
+

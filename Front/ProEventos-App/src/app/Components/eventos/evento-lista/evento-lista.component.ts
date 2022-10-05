@@ -61,18 +61,15 @@ export class EventoListaComponent implements OnInit {
   }
 
   public getEventos(): void {
-    this.eventoService.getEventos().subscribe({
-      next: (eventos: Evento[]) => {
+    this.eventoService.getEventos().subscribe(
+      (eventos: Evento[]) => {
         this.eventos = eventos,
           this.eventsFilters = eventos
       },
-      error: (error: any) => {
-        this.spinner.hide();
+      (error: any) => {
         this.toastr.error('Erro ao carregar os eventos!', 'Error')
-      },
-      complete: () => this.spinner.hide()
-
-    });
+      }
+    ).add(() => this.spinner.hide());
   }
 
   public updateImageStage(): void {
@@ -92,19 +89,14 @@ export class EventoListaComponent implements OnInit {
       (result: string) => {
         console.log(result);
         this.toastr.success('O Evento foi deletado com sucesso', 'Deletado!')
-        this.spinner.hide()
         this.getEventos()
 
       },
       (error: any) => {
         console.error(error)
-        this.spinner.hide();
         this.toastr.error('Erro ao deletar o evento!', 'Error')
-      },
-      () => {
-        this.spinner.hide()
-      },
-    )
+      }
+    ).add(() => this.spinner.hide())
 
 
   }
