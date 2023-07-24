@@ -28,11 +28,11 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var lotes = await _lotesService.GetEventosByIdAsync(true);
-                if (eventos == null) return NoContent();
+                var lotes = await _loteService.GetLotesByEventoIdAsync(eventoId);
+                if (lotes == null) return NoContent();
 
                
-                return Ok(eventos);
+                return Ok(lotes);
             }
             catch (Exception ex)
             {
@@ -42,14 +42,14 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut("{eventoId}")]
-        public async Task<IActionResult> Put(int eventoId, LoteDto[] models)
+        public async Task<IActionResult> SaveLotes(int eventoId, LoteDto[] models)
         {
             try
             {
-                var eventos = await _eventoService.Update(eventoId, models);
-                if (eventos == null) return BadRequest("Data not updated");
+                var lotes = await _loteService.SaveLotes(eventoId, models);
+                if (lotes == null) return BadRequest("Data not updated");
 
-                return Ok(eventos);
+                return Ok(lotes);
             }
             catch (Exception ex)
             {
@@ -59,14 +59,14 @@ namespace ProEventos.API.Controllers
         }
 
 
-        [HttpDelete("{eventoId/{loteId}}")]
+        [HttpDelete("{eventoId}/{loteId}")]
         public async Task<IActionResult> delete(int eventoId, int loteId)
         {
             try
             {
-                var evento = _eventoService.GetEventosByIdAsync(id);
-                if(evento == null) return NoContent();
-                return await _eventoService.DeleteEventos(id) ? Ok(new {message = "Deleted"}) : throw new Exception("Erro ao tentar deletar");
+                var lote = await _loteService.GetLoteByIdsAsync(eventoId, loteId);
+                if(lote == null) return NoContent();
+                return await _loteService.DeleteLote(lote.EventoId, lote.Id) ? Ok(new {message = "Deleted"}) : throw new Exception("Erro ao tentar deletar");
             }
             catch (Exception ex)
             {

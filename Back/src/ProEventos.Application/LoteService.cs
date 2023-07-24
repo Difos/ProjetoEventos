@@ -21,16 +21,16 @@ public class LoteService : ILoteService
     }
     public async Task<bool> DeleteLote(int eventoId, int loteId)
     {
-        try 
+        try
         {
             var lote = await _loteRepository.GetLoteByIdsAsync(eventoId, loteId);
-            if(lote == null) throw new Exception("Lote para delete não encontrado");
+            if (lote == null) throw new Exception("Lote para delete não encontrado");
 
             _repo.Delete<Lote>(lote);
 
             return await _repo.SaveChangesAsync();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw new Exception(ex.Message);
         }
@@ -38,17 +38,17 @@ public class LoteService : ILoteService
 
     public async Task<LoteDto> GetLoteByIdsAsync(int eventoId, int loteId)
     {
-        try 
+        try
         {
             var lote = await _loteRepository.GetLoteByIdsAsync(eventoId, loteId);
-            if(lote == null) return null;
+            if (lote == null) return null;
 
             var resultado = _mapper.Map<LoteDto>(lote);
 
             return resultado;
-            
+
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw new Exception(ex.Message);
         }
@@ -56,16 +56,16 @@ public class LoteService : ILoteService
 
     public async Task<LoteDto[]> GetLotesByEventoIdAsync(int eventoId)
     {
-        try 
+        try
         {
             var lotes = await _loteRepository.GetLotesByEventoIdAsync(eventoId);
-            if(lotes == null) return null;
+            if (lotes == null) return null;
 
             var resultado = _mapper.Map<LoteDto[]>(lotes);
 
             return resultado;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw new Exception(ex.Message);
         }
@@ -73,20 +73,20 @@ public class LoteService : ILoteService
 
     public async Task<LoteDto[]> SaveLotes(int eventoId, LoteDto[] models)
     {
-        try 
+        try
         {
             var lotes = await _loteRepository.GetLotesByEventoIdAsync(eventoId);
-            if(lotes == null) return null;
+            if (lotes == null) return null;
 
-            foreach(var model in models)
+            foreach (var model in models)
             {
-                if(model.Id == 0)
+                if (model.Id == 0)
                 {
-                    
+                    await AddLotes(eventoId, model);
                 }
-                else 
+                else
                 {
-                    var lote = lotes.FirstOrDefault( lote => lote.Id == model.Id);
+                    var lote = lotes.FirstOrDefault(lote => lote.Id == model.Id);
                     model.EventoId = eventoId;
 
                     _mapper.Map(model, lote);
@@ -102,8 +102,28 @@ public class LoteService : ILoteService
             return _mapper.Map<LoteDto[]>(loteRetorno);
 
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task AddLotes(int eventoId, LoteDto model)
+    {
+        try
+        {
+            var lote = _mapper.Map<Lote>(model);
+
+            lote.EventoId = eventoId;
+
+            _repo.Add<Lote>(lote);
+
+            await _repo.SaveChangesAsync();
+
+        }
+        catch (Exception ex)
+        {
+
             throw new Exception(ex.Message);
         }
     }

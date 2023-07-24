@@ -46,8 +46,12 @@ namespace ProEventos.API
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IEventoService,EventoService>();
+
             services.AddScoped<IRepository,Repository>();
             services.AddScoped<IEventoRepository,EventoRepository>();
+            
+            services.AddScoped<ILoteService,LoteService>();
+            services.AddScoped<ILoteRepository, LoteRepository>();
 
             /*var mappingConfig = new MapperConfiguration(mc =>
             {
