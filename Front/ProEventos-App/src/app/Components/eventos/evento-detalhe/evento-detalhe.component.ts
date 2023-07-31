@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { EventoService } from '@app/services/Evento.service';
 import { LoteService } from '@app/services/Lote.service';
 
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
@@ -18,11 +19,12 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./evento-detalhe.component.scss']
 })
 export class EventoDetalheComponent implements OnInit {
-
+  modalRef: BsModalRef;
   form!: FormGroup;
   evento = {} as Evento;
   saveState = 'post';
   eventoId: number;
+  loteAtual = {id: 0, nome: '', indice: 0}
 
   get f(): any {
     return this.form.controls
@@ -52,14 +54,13 @@ export class EventoDetalheComponent implements OnInit {
     private loteService: LoteService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
+    private modalService: BsModalService,
     private routerA: Router) {
     this.localeService.use('pt-br')
   }
 
   public carregarEvento(): void {
     this.eventoId = +this.router.snapshot.paramMap.get('id');
-
-
 
     if (this.eventoId != null || this.eventoId == 0) {
       this.saveState = 'put';
@@ -80,9 +81,39 @@ export class EventoDetalheComponent implements OnInit {
       ).add(() => this.spinner.hide())
     }
   }
+
   ngOnInit(): void {
     this.validation();
     this.carregarEvento();
+
+  }
+
+  public confirm(): void{
+    this.modalRef.hide();
+    this.spinner.show();
+    this.loteService.deleteLote(this.eventoId, this.loteAtual.id)
+    .subscribe(
+      () => {
+        this.toastr.success('batch has been deleted')
+      },
+      (error) => {
+        this.toastr.error(`erro to try delete the batch ${this.loteAtual.nome}`)
+      }
+    ).add(() => this.spinner.hide())
+  }
+  public decline(): void {
+    this.modalRef.hide();
+  }
+
+  public removerLote(template: TemplateRef<any>, indice: number): void{
+
+    this.loteAtual.id = this.lotes.get(indice + '.id').value
+    this.loteAtual.nome = this.lotes.get(indice + '.nome').value
+    this.loteAtual.indice = indice
+
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'})
+
+    this.lotes.removeAt(indice);
 
   }
 
@@ -91,6 +122,7 @@ export class EventoDetalheComponent implements OnInit {
       (lotesRetorno: Lote[]) => {
         lotesRetorno.forEach(lote => {
           this.lotes.push(this.criarLote(lote))
+          this.lotes.removeAt(this.loteAtual.indice)
         })
       },
       (error: any) => {
