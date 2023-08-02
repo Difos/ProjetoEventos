@@ -39,6 +39,15 @@ export class EventoDetalheComponent implements OnInit {
     }
   }
 
+  get bsConfigLote(): any {
+    return {
+      isAnimated: true,
+      dateInputFormat: 'DD/MM/YYYY',
+      containerClass: 'theme-default',
+      showWeekNumbers: false
+    }
+  }
+
   get modoEditar(): boolean {
     return this.saveState === 'put'
   }
@@ -62,7 +71,7 @@ export class EventoDetalheComponent implements OnInit {
   public carregarEvento(): void {
     this.eventoId = +this.router.snapshot.paramMap.get('id');
 
-    if (this.eventoId != null || this.eventoId == 0) {
+    if (this.eventoId != null && this.eventoId != 0) {
       this.saveState = 'put';
       this.spinner.show();
       this.eventoService.getEventoId(this.eventoId).subscribe(
@@ -170,6 +179,10 @@ export class EventoDetalheComponent implements OnInit {
     return { 'is-invalid': campoForm?.errors && campoForm?.touched }
   }
 
+  public mudarValorData(value: Date, indice: number, campo: string): void {
+    this.lotes.value[indice][campo] = value;
+  }
+
   public salvarEvento(): void {
 
     this.spinner.show();
@@ -198,9 +211,13 @@ export class EventoDetalheComponent implements OnInit {
     }
   }
 
+  public returnTituloLote(titulo: string): string {
+    return titulo === null || titulo =='' ? titulo : 'Nome do lote'
+  }
+
   public salvarLotes(): void {
-    this.spinner.show();
     if(this.form.controls.lotes.valid){
+      this.spinner.show();
       this.loteService.saveLote(this.eventoId, this.form.value.lotes)
       .subscribe(
         () => {

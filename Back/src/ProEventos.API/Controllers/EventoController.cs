@@ -10,6 +10,8 @@ using ProEventos.Infra.Context;
 using ProEventos.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using ProEventos.Application.Dtos;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ProEventos.API.Controllers
 {
@@ -18,9 +20,11 @@ namespace ProEventos.API.Controllers
     public class EventoController : ControllerBase
     {
         private readonly IEventoService _eventoService;
-        public EventoController(IEventoService eventoService)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public EventoController(IEventoService eventoService, IWebHostEnvironment hostEnvironment)
         {
             _eventoService = eventoService;
+            _hostEnvironment = hostEnvironment;
         }
 
         [HttpGet]
@@ -75,6 +79,34 @@ namespace ProEventos.API.Controllers
             }
         }
 
+        [HttpPost("upload-image/{eventoId}")]
+        public async Task<IActionResult> UploadImage(int eventoId)
+        {
+            try
+            {
+                var evento = await _eventoService.GetEventosByIdAsync(eventoId, true);
+                if (evento == null) return BadRequest("Data not insert");
+
+                var file = Request.Form.Files[0];
+
+                if(file.Length > 0)
+                {
+                    DeleteImage(evento.ImagemURL);
+                    //evento.ImagemURL = SaveImage(file);
+                }
+
+                var EventoRetorno = await _eventoService.Update(eventoId, evento);
+
+                return Ok(EventoRetorno);
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to insert data. Erro {ex.Message}");
+            }
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Post(EventoDto model)
         {
@@ -123,6 +155,15 @@ namespace ProEventos.API.Controllers
             {
 
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error to deleted data. Erro {ex.Message}");
+            }
+        }
+
+        [NonAction]
+        public void DeleteImage(string imageURL) {
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageURL);
+            if(System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
             }
         }
 
