@@ -23,6 +23,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 
 import { EventoService } from './services/Evento.service';

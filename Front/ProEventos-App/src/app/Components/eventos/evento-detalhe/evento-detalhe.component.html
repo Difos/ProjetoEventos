@@ -108,6 +108,9 @@
         <div formArrayName="lotes" *ngFor="let lote of lotes.controls; let i=index">
           <fieldset [formGroupName]="i" class="form-group">
             <legend class="d-flex justify-content-between capitalize">
+              {{
+                returnTituloLote(lotes.get(i+'.nome').value)
+              }}
               <button (click)="removerLote(template, i)" class="p-2 btn btn-sm btn-outline-warning mb-1 d-flex"
                 tooltip="Excluir Lote"
                 [adaptivePosition]="false"
@@ -128,7 +131,7 @@
               <label>Quantidade</label>
               <input
               [ngClass]="cssValidator(lotes.get(i+'.qtd'))"
-              type="text" class="form-control" formControlName="qtd" placeholder="000">
+              type="text" class="form-control" formControlNsame="qtd" placeholder="000">
             </div>
             <div class="form-group col-md-4">
               <label>Preço</label>
@@ -138,15 +141,21 @@
             </div>
             <div class="form-group col-md-4">
               <label>Data Início</label>
-              <input
-
-              type="text" class="form-control" formControlName="dataInicio" placeholder="01/01/2019">
+              <input type="text"
+              class="form-control"
+              value="{{lotes.get(i+'.dataInicio').value | date: 'dd/MM/yyyy' }}"
+              bsDatepicker
+              formControlName="dataInicio" placeholder="01/01/2023"
+              (bsValueChange)="mudarValorData($event, i,'dataInicio')">
             </div>
             <div class="form-group col-md-4">
               <label>Data Fim</label>
               <input
-
-              type="text" class="form-control" formControlName="dataFim" placeholder="01/01/2019">
+              type="text" class="form-control"
+              value="{{lotes.get(i+'.dataFim').value | date: 'dd/MM/yyyy'}}"
+              bsDatepicker
+              formControlName="dataFim" placeholder="01/01/2023"
+              (bsValueChange)="mudarValorData($event, i, 'dataFim')">
             </div>
           </div>
         </fieldset>
@@ -163,13 +172,12 @@
     <button class="btn btn-outline-secondary mr-auto border">
       Cancelar Alteração
     </button>
-    <button (click)="salvarLotes()" class="btn btn-success">
+    <button [disabled]="!form.controls.lotes.valid" (click)="salvarLotes()" class="btn btn-success">
       Salvar Lotes
     </button>
   </div>
 </div>
 </div>
-
 
 <br/>
 
