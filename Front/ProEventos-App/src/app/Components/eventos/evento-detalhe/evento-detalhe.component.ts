@@ -25,6 +25,7 @@ export class EventoDetalheComponent implements OnInit {
   saveState = 'post';
   eventoId: number;
   loteAtual = {id: 0, nome: '', indice: 0}
+  imagemURL = 'assets/png2.png'
 
   get f(): any {
     return this.form.controls
