@@ -92,7 +92,7 @@ namespace ProEventos.API.Controllers
                 if(file.Length > 0)
                 {
                     DeleteImage(evento.ImagemURL);
-                    //evento.ImagemURL = SaveImage(file);
+                    evento.ImagemURL = await SaveImage(file);
                 }
 
                 var EventoRetorno = await _eventoService.Update(eventoId, evento);
@@ -159,7 +159,26 @@ namespace ProEventos.API.Controllers
         }
 
         [NonAction]
-        public void DeleteImage(string imageURL) {
+        public async Task<string> SaveImage(IFormFile imageFile) 
+        {
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)
+                                              .Take(10)
+                                              .ToArray()
+                                              ).Replace(' ','-');
+
+            imageName = $"{imageName}{DateTime.UtcNow.ToString("yyymmssfff")}{Path.GetExtension(imageFile.FileName)}";
+
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images",imageName);
+            using(var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+            return imageName;
+           
+        }
+        [NonAction]
+        public void DeleteImage(string imageURL) 
+        {
             var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageURL);
             if(System.IO.File.Exists(imagePath))
             {
