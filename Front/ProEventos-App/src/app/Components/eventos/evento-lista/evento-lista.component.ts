@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -60,6 +61,12 @@ export class EventoListaComponent implements OnInit {
 
   }
 
+  public returnImage(imagemURL: string): string {
+    console.log(environment.apiURL)
+    return (imagemURL !== '')
+      ? `${environment.apiURL}resources/images/${imagemURL}`
+      : 'assets/img/pn2.jpg'
+  }
   public getEventos(): void {
     this.eventoService.getEventos().subscribe(
       (eventos: Evento[]) => {

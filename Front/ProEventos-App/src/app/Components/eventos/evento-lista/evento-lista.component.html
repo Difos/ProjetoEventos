@@ -39,7 +39,7 @@
       <tbody>
         <tr *ngFor="let evento of eventsFilters" (click)="detalheEvento(evento.id)" style="cursor:pointer;">
           <td>{{evento.id}}</td>
-          <td class="d-none d-md-table-cell"><img [collapse]="isImg" [isAnimated]="true" src="/assets/png1.png"
+          <td class="d-none d-md-table-cell"><img [collapse]="isImg" [isAnimated]="true" [src]="returnImage(evento.imagemURL)"
               [style.width.px]="imgSize"></td>
           <td>{{evento.tema}}</td>
           <td class="d-none d-md-table-cell">{{evento.local}}</td>

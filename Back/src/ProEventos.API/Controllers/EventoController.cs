@@ -149,7 +149,15 @@ namespace ProEventos.API.Controllers
             {
                 var evento = await _eventoService.GetEventosByIdAsync(id);
                 if(evento == null) return NoContent();
-                return await _eventoService.DeleteEventos(id) ? Ok(new {message = "Deleted"}) : throw new Exception("Erro ao tentar deletar");
+                if(await _eventoService.DeleteEventos(id)) 
+                {
+                    DeleteImage(evento.ImagemURL);
+                    return Ok(new { message = "deleted"});
+                }
+                else 
+                {
+                    throw new Exception("Erro ao tentar deletar");
+                }
             }
             catch (Exception ex)
             {
@@ -168,7 +176,7 @@ namespace ProEventos.API.Controllers
 
             imageName = $"{imageName}{DateTime.UtcNow.ToString("yyymmssfff")}{Path.GetExtension(imageFile.FileName)}";
 
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images",imageName);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"resources/images",imageName);
             using(var fileStream = new FileStream(imagePath, FileMode.Create))
             {
                 await imageFile.CopyToAsync(fileStream);
@@ -179,7 +187,7 @@ namespace ProEventos.API.Controllers
         [NonAction]
         public void DeleteImage(string imageURL) 
         {
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageURL);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"resources/images", imageURL);
             if(System.IO.File.Exists(imagePath))
             {
                 System.IO.File.Delete(imagePath);
