@@ -10,7 +10,7 @@
               <label>Tema</label>
               <input type="text" class="form-control is-invalid"
                 [ngClass]="{'is-invalid':f.tema.errors && f.tema.touched}" formControlName="tema"
-                placeholder="Insira o Tema">
+                placeholder="Insira o Tema" [(ngModel)]="evento.tema">
               <div *ngIf="f.tema.errors?.required" class="invalid-feedback">
                 tema é obrigatório
               </div>
@@ -67,7 +67,7 @@
                 Telefone é obrigatório
               </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-8">
               <label>Email</label>
               <input type="text" [ngClass]="cssValidator(f.email)" class="form-control is-invalid"
                 formControlName="email" placeholder="e-mail">
@@ -78,14 +78,14 @@
                 email precisa ser valido
               </div>
             </div>
-            <div class="form-group col-md-4">
+            <!-- <div class="form-group col-md-4">
               <label>Imagem</label>
               <input type="text" [ngClass]="cssValidator(f.imagemURL)" class="form-control is-invalid"
                 formControlName="imagemURL" placeholder="imagem">
               <div *ngIf="f.imagemURL?.errors?.required" class="invalid-feedback">
                 Imagem é obrigatório
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="card-footer">
@@ -185,7 +185,7 @@
     <div [formGroup]="form" class="card-evento-view shadow-sm">
       <div class="form-row">
         <div class="form-group m-0">
-          <input type="file" #file class="form-control is-invalid" placeholder="" style="display: none">
+          <input type="file" #file (change)="onFileChange($event)" class="form-control is-invalid" placeholder="" style="display: none">
         </div>
       </div>
       <div class="card profile-card-2">

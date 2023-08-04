@@ -6,6 +6,7 @@ import { Evento } from '@app/models/Evento';
 import { Lote } from '@app/models/Lotes';
 import { EventoService } from '@app/services/Evento.service';
 import { LoteService } from '@app/services/Lote.service';
+import { environment } from '@environments/environment';
 
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -26,6 +27,7 @@ export class EventoDetalheComponent implements OnInit {
   eventoId: number;
   loteAtual = {id: 0, nome: '', indice: 0}
   imagemURL = 'assets/png2.png'
+  file: File;
 
   get f(): any {
     return this.form.controls
@@ -79,6 +81,9 @@ export class EventoDetalheComponent implements OnInit {
         (evento: Evento) => {
           this.evento = { ...evento }
           this.form.patchValue(this.evento);
+          if(this.evento.imagemURL !== ''){
+            this.imagemURL = environment.apiURL +'resources/images/'+this.evento.imagemURL
+          }
           // this.carregarLotes()
           this.evento.lotes.forEach(lote =>{
             this.lotes.push(this.criarLote(lote))
@@ -148,7 +153,7 @@ export class EventoDetalheComponent implements OnInit {
       local: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
       dataEvento: ['', Validators.required],
       qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
-      imagemURL: ['', Validators.required],
+      // imagemURL: ['', Validators.required],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       lotes: this.formBuilder.array([])
@@ -233,6 +238,33 @@ export class EventoDetalheComponent implements OnInit {
         this.spinner.hide()
       })
     }
+  }
+
+  onFileChange(ev: any): void {
+    const reader = new FileReader();
+
+    reader.onload = (event: any)  => this.imagemURL = event.target.result;
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.upLoadImage();
+
+  }
+
+  upLoadImage(): void {
+
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe(
+      () => {
+        this.carregarEvento();
+        this.toastr.success('Image has been uploaded successfully','success!');
+      },
+      (error: any) => {
+        this.toastr.error('error to try save batchs')
+        console.error(error);
+      }
+    ).add(() => this.spinner.hide);
+
   }
 }
 
