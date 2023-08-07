@@ -51,7 +51,9 @@ namespace ProEventos.Infra
                         .ThenInclude(p => p.Evento);
                 }
 
-                query = query.AsNoTracking().OrderBy(p => p.Id).Where(p => p.Nome.ToLower().Contains(name.ToLower()));
+                query = query.AsNoTracking().OrderBy(p => p.Id).Where(
+                    p => p.User.PrimeiroNome.ToLower().Contains(name.ToLower()) && 
+                         p.User.UltimoNome.ToLower().Contains(name.ToLower()));
                 return await query.ToArrayAsync();
             }
             catch (System.Exception)
