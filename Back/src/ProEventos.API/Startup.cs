@@ -56,6 +56,11 @@ namespace ProEventos.API
             services.AddScoped<ILoteService,LoteService>();
             services.AddScoped<ILoteRepository, LoteRepository>();
 
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
+           
+
             /*var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new ProEventosProfile());
