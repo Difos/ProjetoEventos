@@ -22,6 +22,7 @@ using ProEventos.API.Helpers;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace ProEventos.API
 {
@@ -42,6 +43,8 @@ namespace ProEventos.API
             );
 
             services.AddControllers()
+                    .AddJsonOptions(options => 
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
                     .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = 
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore
                     );
