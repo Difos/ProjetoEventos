@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain;
 using ProEventos.Domain.Identity;
 
-namespace ProEventos.Infra.Context{
+namespace ProEventos.Infra.Context {
     public class InfraContext : IdentityDbContext<User, Role, int,
                                 IdentityUserClaim<int>, 
                                 UserRole, 

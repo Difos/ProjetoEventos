@@ -5,8 +5,8 @@ namespace ProEventos.Infra.Interfaces
 {
     public interface IEventoRepository
     {
-        Task<Evento[]> GetEventosByTemaAsync(string tema, bool includePalestrantes=false);
-        Task<Evento[]> GetAllEventosAsync(bool includePalestrantes=false);
-        Task<Evento> GetEventosByIdAsync(int EventoId, bool includePalestrantes=false);
+        Task<Evento[]> GetEventosByTemaAsync(int userId, string tema, bool includePalestrantes=false);
+        Task<Evento[]> GetAllEventosAsync(int userId, bool includePalestrantes=false);
+        Task<Evento> GetEventosByIdAsync(int userId, int EventoId, bool includePalestrantes=false);
     }
 }

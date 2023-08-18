@@ -52,12 +52,12 @@ namespace ProEventos.API.Controllers
             {
                 if (await _userService.UserExists(userDto.UserName))
                     return BadRequest("user already exists!");
-                
+
                 var user = await _userService.CreateAccountAsync(userDto);
 
                 if (user != null)
                     return Ok("User register with sucess");
-                
+
                 return BadRequest("user cannot be created, try again later");
 
             }
@@ -75,25 +75,49 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-               var user = await _userService.GetUserByUserNameAsync(userLoginDto.Username);
-               if(user == null) return Unauthorized("User or password not valid!");
+                var user = await _userService.GetUserByUserNameAsync(userLoginDto.Username);
+                if (user == null) return Unauthorized("User or password not valid!");
 
-               var result = await _userService.CheckUserPasswordAsync(user, userLoginDto.Password);
+                var result = await _userService.CheckUserPasswordAsync(user, userLoginDto.Password);
 
-               if(!result.Succeeded) return Unauthorized();
+                if (!result.Succeeded) return Unauthorized();
 
-               return Ok(new 
-               {
-                userName = user.UserName,
-                PrimeiroNome = user.PrimeiroNome,
-                token = _tokenService.CreateToken(user).Result
-               });
+                return Ok(new
+                {
+                    userName = user.UserName,
+                    PrimeiroNome = user.PrimeiroNome,
+                    token = _tokenService.CreateToken(user).Result
+                });
             }
             catch (Exception ex)
             {
 
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
                 $"Error to retrieve the user. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpPut("UpdateUser")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateUser(UserUpdateDto userUpdateDto)
+        {
+            try
+            {
+                var user = await _userService.GetUserByUserNameAsync(User.GetUserName());
+                if (user == null) return Unauthorized("User not valid");
+
+                var userReturn = await _userService.UpdateAccount(userUpdateDto);
+
+                if(userReturn == null) return NoContent();
+
+                return Ok(userReturn);
+
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                $"Error to update the user. Erro: {ex.Message}");
             }
         }
     }
