@@ -14,7 +14,7 @@ namespace ProEventos.Infra
         {
             _context = context;
         }
-        public async Task<Evento[]> GetAllEventosAsync(bool includePalestrantes = false)
+        public async Task<Evento[]> GetAllEventosAsync(int userId, bool includePalestrantes = false)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace ProEventos.Infra
                         .ThenInclude(p => p.Palestrante);
                 }
 
-                query = query.AsNoTracking().OrderBy(e => e.Id);
+                query = query.AsNoTracking().Where(e => e.UserId == userId).OrderBy(e => e.Id);
                 return await query.ToArrayAsync();
             }
             catch (System.Exception)
@@ -38,7 +38,7 @@ namespace ProEventos.Infra
             }
         }
 
-        public async Task<Evento> GetEventosByIdAsync(int EventoId, bool includePalestrantes = false)
+        public async Task<Evento> GetEventosByIdAsync(int userId, int EventoId, bool includePalestrantes = false)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace ProEventos.Infra
 
                 query = query.AsNoTracking().OrderBy(e => e.Id);
 
-                return await query.FirstOrDefaultAsync(e => e.Id == EventoId);
+                return await query.FirstOrDefaultAsync(e => e.Id == EventoId && e.UserId == userId);
             }
             catch (System.Exception)
             {
@@ -64,7 +64,7 @@ namespace ProEventos.Infra
             }
         }
 
-        public async Task<Evento[]> GetEventosByTemaAsync(string tema, bool includePalestrantes = false)
+        public async Task<Evento[]> GetEventosByTemaAsync(int userId, string tema, bool includePalestrantes = false)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace ProEventos.Infra
                         .ThenInclude(p => p.Palestrante);
                 }
 
-                query = query.AsNoTracking().OrderBy(e => e.Id).Where(e => e.Tema.ToLower().Contains(tema.ToLower()));
+                query = query.AsNoTracking().OrderBy(e => e.Id).Where(e => e.Tema.ToLower().Contains(tema.ToLower()) && e.UserId == userId);
                 return await query.ToArrayAsync();
             }
             catch (System.Exception)
