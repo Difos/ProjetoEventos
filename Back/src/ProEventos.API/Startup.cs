@@ -96,6 +96,7 @@ namespace ProEventos.API
                             ValidateAudience = false
                         };
                     });
+
             /*var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new ProEventosProfile());
@@ -108,6 +109,35 @@ namespace ProEventos.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
+                {
+                    Description = @"JWT authorization header using a bearer.
+                                    Enter with 'Bearer' [space] and put your token.
+                                    Example 'Bearer 123asdc123'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement() 
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference 
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer",
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
             });
 
             services.AddCors();
