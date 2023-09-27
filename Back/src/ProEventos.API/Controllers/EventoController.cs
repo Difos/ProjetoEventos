@@ -35,6 +35,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             try
@@ -116,6 +117,7 @@ namespace ProEventos.API.Controllers
 
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Post(EventoDto model)
         {
             try
