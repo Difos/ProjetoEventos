@@ -160,11 +160,11 @@ namespace ProEventos.API
             app.UseAuthentication();
             app.UseAuthorization();
             
-            app.UseCors(cors => cors.AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowAnyOrigin()
+            app.UseCors(cors => cors.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
             );
-
+        
             app.UseStaticFiles(new StaticFileOptions(){
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
                 RequestPath = new PathString("/Resources")
