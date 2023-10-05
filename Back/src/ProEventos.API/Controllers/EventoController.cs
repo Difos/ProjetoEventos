@@ -36,6 +36,7 @@ namespace ProEventos.API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             try
@@ -89,6 +90,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost("upload-image/{eventoId}")]
+        [Authorize]
         public async Task<IActionResult> UploadImage(int eventoId)
         {
             try
@@ -98,9 +100,12 @@ namespace ProEventos.API.Controllers
 
                 var file = Request.Form.Files[0];
 
-                if(file.Length > 0)
+                if (file.Length > 0)
                 {
-                    DeleteImage(evento.ImagemURL);
+                    if (evento.ImagemURL != null)
+                    {
+                        DeleteImage(evento.ImagemURL);
+                    }
                     evento.ImagemURL = await SaveImage(file);
                 }
 

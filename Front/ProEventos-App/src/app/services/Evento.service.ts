@@ -11,11 +11,11 @@ import { environment } from '@environments/environment';
 export class EventoService {
 
   baseURL = environment.apiURL+'api/evento'
-  tokenHeader = new HttpHeaders({'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}`})
+
   constructor(private http: HttpClient) { }
 
   public getEventos():Observable<Evento[]> {
-    return this.http.get<Evento[]>(this.baseURL, {headers: this.tokenHeader})
+    return this.http.get<Evento[]>(this.baseURL)
     .pipe(take(1))
   }
 
