@@ -38,6 +38,7 @@ import { LoginComponent } from './Components/user/login/login.component';
 import { RegistrationComponent } from './Components/user/registration/registration.component';
 import { AccountService } from './services/Account.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { HomeComponent } from './Home/Home.component';
 
 defineLocale('pt-br',ptBrLocale);
 
@@ -54,10 +55,12 @@ defineLocale('pt-br',ptBrLocale);
     DateTimeFormatPipe,
     EventoDetalheComponent,
     EventoListaComponent,
+    HomeComponent,
     UserComponent,
     LoginComponent,
-    RegistrationComponent
-  ],
+    RegistrationComponent,
+      HomeComponent
+   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
