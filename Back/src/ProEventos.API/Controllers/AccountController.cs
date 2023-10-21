@@ -104,11 +104,13 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut("UpdateUser")]
-        [AllowAnonymous]
         public async Task<IActionResult> UpdateUser(UserUpdateDto userUpdateDto)
         {
             try
             {
+                if(userUpdateDto.UserName != User.GetUserName())
+                    return Unauthorized("Usuario Invalido");
+
                 var user = await _userService.GetUserByUserNameAsync(User.GetUserName());
                 if (user == null) return Unauthorized("User not valid");
 
@@ -116,7 +118,11 @@ namespace ProEventos.API.Controllers
 
                 if(userReturn == null) return NoContent();
 
-                return Ok(userReturn);
+                return Ok(new {
+                    userName = userReturn.UserName,
+                    PrimeiroNome = userReturn.PrimeiroNome,
+                    token = _tokenService.CreateToken(userReturn).Result 
+                });
 
             }
             catch (Exception ex)
